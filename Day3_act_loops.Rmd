@@ -70,6 +70,36 @@ if (marmot < 0.5) {
   print("this is a large marmot")
 }
 ```
+# For Loops
+```{r}
+tree_height <- c(1, 2, 6, 10, 14, 20)
+
+for (i in seq_along(tree_height)){
+  val = tree_height[i] + tree_height[i + 1]
+  print(val)
+}
+```
+
+```{r}
+# convert human age to animal years, conversion factor depends on the type animal
+
+species <- c("dog", "elephant", "goat", "dog", "dog", "elephant")
+age_human <- c(3, 8, 4, 6, 12, 18)
+
+animal_ages <- vector(mode = "numeric", length = length(species))
+
+for (i in seq_along(species)){
+  if (species[i] == "dog"){
+    animal_age <- age_human[i] * 7
+  }else if (species[i] == "elephant"){
+    animal_age <- age_human[i] * 0.88
+  }else if (species[i] == "goat"){
+    animal_age <- age_human[i] * 4.7
+  }
+  animal_ages[i] <- animal_age
+}
+```
+
 # `group_by() |>  summarize ()`
 
 ```{r}
@@ -101,6 +131,43 @@ penguins |>
   summarize(max_flipper_length = max(flipper_length_mm, na.rm = TRUE),
             min_flipper_length = mean(flipper_length_mm, na.rm = TRUE),
             n = n())
+# across() columns that satisfy our condition then apply the function for those columns
+penguins |> 
+  group_by(species) |> 
+  summarize(across(where(is.numeric), mean, na.rm = TRUE))
+
+#mutate()create these columns where 
+penguins |> 
+  mutate(across(c(species, island),toupper))
+
 ```
 
+### For Loops `Across()` Data Frames
+
+```{r}
+mean_mtcars <- vector(mode = "numeric", length = ncol(mtcars))
+
+for (i in seq_along(mtcars)){
+  mean_value <- mean(mtcars[[i]], na.rm = TRUE)
+  mean_mtcars[i] <- mean_value
+}
+mean_mtcars
+```
+
+# Functional Programming examples
+
+Adding syntatic sugar (apply, across, map_df)
+
+```{r}
+# Calculating the mean of every column
+apply(X = mtcars, MARGIN = 2, FUN = mean)
+
+```
+
+```{r}
+# Purr
+
+map(.x = mtcars, .f = mean)
+#map_
+```
 
