@@ -4,12 +4,13 @@ author: "Guillermo Romero"
 date: "2022-08-10"
 output: html_document
 editor_options: 
-  chunk_output_type: inline
+  chunk_output_type: console
 ---
 
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = TRUE, warning = FALSE, message = FALSE)
 library(tidyverse)
+library(palmerpenguins)
 ```
 
 
@@ -69,6 +70,37 @@ if (marmot < 0.5) {
   print("this is a large marmot")
 }
 ```
+# `group_by() |>  summarize ()`
 
+```{r}
+penguins |> 
+  group_by(species,island) |> 
+  summarize(mean_bill_length = mean(bill_length_mm, na.rm = TRUE),
+            sd_bill_length = sd(bill_length_mm, na.rm = TRUE),
+            n = n())
+# groupby R now knows that whatever you want to do next will be done by group
+#summarize() whatever function you give it will be applied to each group and returned as a summary table
+# mean_bill_length is returned a new column for the values
+# Nested grouping, so break up by species and island, group(species,island)
+# 'n()' to count everything including rows that were NA
+```
+
+```{r}
+# Find the mean and sd of character height in "starwars" grouped by homeworld
+starwars |> 
+  group_by(homeworld) |> 
+  summarize(mean_character_height = mean(height, na.rm = TRUE),
+            sd_character_height = sd(height, na.rm = TRUE))
+
+
+
+# Find the max, min flipper length, and sample size, for each species of penguins
+
+penguins |> 
+  group_by(species,sex) |> 
+  summarize(max_flipper_length = max(flipper_length_mm, na.rm = TRUE),
+            min_flipper_length = mean(flipper_length_mm, na.rm = TRUE),
+            n = n())
+```
 
 
